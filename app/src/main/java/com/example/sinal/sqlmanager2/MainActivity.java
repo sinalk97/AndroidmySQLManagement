@@ -8,24 +8,30 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final Connection con = new Connection("sinan",3307, "usbw", "192.168.178.166", "sinan");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        final TextView tv = (TextView)findViewById(R.id.databasetxt);
+
+
+        final Button connectionBtn = (Button)findViewById(R.id.connectbtn);
+        connectionBtn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                tv.setText(con.connectionTest());
+                tv.setHint("");
             }
         });
+
     }
 
     @Override
