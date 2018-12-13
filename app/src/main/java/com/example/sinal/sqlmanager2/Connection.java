@@ -1,5 +1,5 @@
 /**
- * @author: Sinan Alkaya
+ * @author: Sinan
  */
 package com.example.sinal.sqlmanager2;
 import android.util.Log;
@@ -72,13 +72,13 @@ public class Connection {
     public String connectionTest(){
         this.setConnection("jdbc:mysql://"+this.getServerAddress()+":"+this.getPort()+"/"+this.getDatabase()+"?autoReconnect=true&useSSL=false");
         try{
-            Class.forName("com.mysql.jdbc.Driver");
+            //Class.forName("com.mysql.jdbc.Driver");
             java.sql.Connection a = DriverManager.getConnection(this.getConnection(), this.getUsername(), this.getPassword());
             return "Success!!!!";
-        }catch(Exception ex){
+        }catch(SQLException ex){
             Log.e("Error ",ex.toString());
             System.out.println(ex.toString());
-            return "error: "+ex.getMessage();
+            return "error: "+ex.getMessage() + " with username: "+ this.username + " port: "+ this.getPort() + " password: "+ this.getPassword() + " database: "+this.getDatabase()+ "\n connectionstring:" + this.getConnection(); //TODO: delete when working
         }
     }
 }

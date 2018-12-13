@@ -15,24 +15,40 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final Connection con = new Connection("sinan",3307, "usbw", "192.168.178.166", "sinan");
+        final Connection con = new Connection("sinan",3306, "sinan", "secret", "sinan");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         final TextView tv = (TextView)findViewById(R.id.databasetxt);
-
+        final TextView messagetext = (TextView)findViewById(R.id.messagetxt);
 
         final Button connectionBtn = (Button)findViewById(R.id.connectbtn);
         connectionBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
-                tv.setText(con.connectionTest());
-                tv.setHint("");
+                messagetext.setText("Connection test...");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    messagetext.setText(e.getMessage());
+
+                }
+                messagetext.setText(con.connectionTest());
+
             }
         });
 
     }
+
+
+
+
+
+
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
