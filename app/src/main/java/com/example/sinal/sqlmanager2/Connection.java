@@ -7,6 +7,8 @@ import android.util.Log;
 import java.sql.DriverManager;
 
 import java.sql.SQLException;
+import java.sql.SQLNonTransientConnectionException;
+import java.sql.SQLSyntaxErrorException;
 
 
 public class Connection {
@@ -16,8 +18,8 @@ public class Connection {
     private String username;
     private String database;
     private String connection;
-
-    //Accessors and modifiers
+    private java.sql.Connection sqlconnection;
+    //getter / Setter
     public void setPassword(String password){
         this.password = password;
     }
@@ -69,16 +71,32 @@ public class Connection {
     }
 
     //Methods
-    public String connectionTest(){
-        this.setConnection("jdbc:mysql://"+this.getServerAddress()+":"+this.getPort()+"/"+this.getDatabase()+"?autoReconnect=true&useSSL=false");
-        try{
-            //Class.forName("com.mysql.jdbc.Driver");
-            java.sql.Connection a = DriverManager.getConnection(this.getConnection(), this.getUsername(), this.getPassword());
+    public String connectionTest() {
+        this.setConnection("jdbc:mysql://" + this.getServerAddress() + ":" + this.getPort() + "/" + this.getDatabase() + "?autoReconnect=true&useSSL=false");
+        try {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                return e.getMessage();
+            }
+            this.sqlconnection = DriverManager.getConnection(this.getConnection(), this.getUsername(), this.getPassword());
             return "Success!!!!";
-        }catch(SQLException ex){
-            Log.e("Error ",ex.toString());
+        } catch (SQLNonTransientConnectionException ex) {
+            return "nonTransientConnection " + ex.getMessage() + " " +ex.getCause();
+        } catch (SQLSyntaxErrorException ex) {
+            return ex.getMessage();
+        } catch (SQLException ex) {
+            Log.e("Error ", ex.toString());
             System.out.println(ex.toString());
-            return "error: "+ex.getMessage() + " with username: "+ this.username + " port: "+ this.getPort() + " password: "+ this.getPassword() + " database: "+this.getDatabase()+ "\n connectionstring:" + this.getConnection(); //TODO: delete when working
+            return "error: " + ex.getMessage();
+        }
+    }
+
+    public boolean connectionStatus(){
+        if(this.sqlconnection != null){
+            return true;
+        }else{
+            return false;
         }
     }
 }
